@@ -5,7 +5,7 @@ import { Uint256 } from "web3";
 import proofData from "./proof_data/proof.json";
 import vkData from "./proof_data/vk.json";
 import verifyInputsData from "./proof_data/verify_inputs.json";
-import gro from "./Groth16Verify";
+import gro from "./contract";
 import formatVk from "./types/types";
 
 const proofArr = proofData.proof;
