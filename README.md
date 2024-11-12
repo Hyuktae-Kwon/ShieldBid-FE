@@ -4,6 +4,10 @@ A blockchain-based online auction service using zero-knowledge proofs.
 
 # Run
 
+Add custom network in Metamask
+
+- Default RPC URL: localhost:8545
+
 Metamask - Settings - Advanced - Clear activity tab data
 
 Run hardhat node in ShieldBid-Contract
