@@ -4,12 +4,18 @@ import { Link } from "react-router-dom";
 
 interface Auction {
   product_id: number;
+  auction_state: string;
   product_name: string;
   product_type: string;
   product_description: string;
-  is_terminated: boolean;
   created_at: Date;
   updated_at: Date;
+  min_price: number;
+}
+
+interface User {
+  id: string;
+  isConsignor: boolean;
 }
 
 function AuctionListPage() {
@@ -25,27 +31,30 @@ function AuctionListPage() {
           product_name: "Antique Vase",
           product_type: "A",
           product_description: "A rare antique vase.",
-          is_terminated: false,
+          auction_state: "Started",
           created_at: now,
           updated_at: now,
+          min_price: 100,
         },
         {
           product_id: 2,
           product_name: "Vintage Watch",
           product_type: "B",
           product_description: "A classic vintage watch.",
-          is_terminated: false,
+          auction_state: "pending",
           created_at: now,
           updated_at: now,
+          min_price: 1000,
         },
         {
           product_id: 3,
           product_name: "Artwork",
           product_type: "A",
           product_description: "Beautiful painting by a famous artist.",
-          is_terminated: true,
+          auction_state: "Terminated",
           created_at: now,
           updated_at: now,
+          min_price: 10000,
         },
       ];
       setAuctions(dummyData);
@@ -61,11 +70,14 @@ function AuctionListPage() {
         {auctions.map((auction) => (
           <li
             key={auction.product_id}
-            className={auction.is_terminated ? "terminated" : ""}
+            className={
+              auction.auction_state === "Terminated" ? "terminated" : ""
+            }
           >
             <h3>{auction.product_name}</h3>
             <p>{auction.product_description}</p>
-            <p>{auction.updated_at.toLocaleString()}</p>
+            <p>{`Opening Bid: ${auction.min_price}`}</p>
+            <p>{`Updated at: ${auction.updated_at.toLocaleString()}`}</p>
             <Link to={`/auction/${auction.product_id}`}>
               <button>View Auction</button>
             </Link>

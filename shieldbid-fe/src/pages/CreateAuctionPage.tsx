@@ -1,19 +1,21 @@
-// CreateAuctionPage.tsx
 import React, { useState } from "react";
 
 function CreateAuctionPage() {
   const [auctionName, setAuctionName] = useState("");
   const [startingBid, setStartingBid] = useState("");
   const [description, setDescription] = useState("");
+  const [productType, setProductType] = useState("");
+  const [productName, setProductName] = useState("");
 
   const handleCreateAuction = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Auction Created:", {
       auctionName,
+      productName,
+      productType,
       startingBid,
       description,
     });
-    // Add logic
   };
 
   return (
@@ -26,6 +28,24 @@ function CreateAuctionPage() {
             type="text"
             value={auctionName}
             onChange={(e) => setAuctionName(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Product Name:</label>
+          <input
+            type="text"
+            value={productName}
+            onChange={(e) => setProductName(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label>Product Type</label>
+          <input
+            type="text"
+            value={productType}
+            onChange={(e) => setProductType(e.target.value)}
             required
           />
         </div>

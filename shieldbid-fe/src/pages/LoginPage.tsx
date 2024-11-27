@@ -2,12 +2,11 @@
 import React, { useState } from "react";
 
 function LoginPage() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [address, setAddress] = useState("");
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login with:", { username, password });
+    console.log("Login with:", { address });
   };
 
   return (
@@ -15,20 +14,11 @@ function LoginPage() {
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
-          <label>Username: </label>
+          <label>Enter user address: </label>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Password: </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
             required
           />
         </div>

@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import VerifyGroth16Page from "./pages/VerifyGroth16Page";
-import SignupPage from "./pages/SignupPage";
+import SignupPage from "./pages/MainPage";
 import LoginPage from "./pages/LoginPage";
 import CreateAuctionPage from "./pages/CreateAuctionPage";
 import AuctionListPage from "./pages/AuctionListPage";
@@ -33,7 +33,7 @@ function App() {
           <Route path="/verify-proof" element={<VerifyGroth16Page />} />
           <Route path="/create-auction" element={<CreateAuctionPage />} />
           <Route path="/auction-list" element={<AuctionListPage />} />
-          <Route path="/auction/:id" element={<AuctionDetailPage />} />
+          <Route path="/auction/:productId" element={<AuctionDetailPage />} />
         </Routes>
       </div>
     </Router>
