@@ -4,6 +4,6 @@ li.terminated {
 }
 
 li.terminated button {
-  pointer-events: none;
-  cursor: not-allowed;
+  pointer-events: auto; /* 클릭 가능 */
+  cursor: pointer;
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./AuctionListPage.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface Auction {
   product_id: number;
@@ -13,15 +13,10 @@ interface Auction {
   min_price: number;
 }
 
-interface User {
-  id: string;
-  isConsignor: boolean;
-}
-
 function AuctionListPage() {
   const [auctions, setAuctions] = useState<Auction[]>([]);
-
   const now = new Date(Date.now());
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAuctions = async () => {
@@ -63,6 +58,10 @@ function AuctionListPage() {
     fetchAuctions();
   }, []);
 
+  const handleNavigateToProve = (auctionId: number) => {
+    navigate(`/proveGroth16/${auctionId}`);
+  };
+
   return (
     <div>
       <h1>Auction List</h1>
@@ -78,9 +77,15 @@ function AuctionListPage() {
             <p>{auction.product_description}</p>
             <p>{`Opening Bid: ${auction.min_price}`}</p>
             <p>{`Updated at: ${auction.updated_at.toLocaleString()}`}</p>
-            <Link to={`/auction/${auction.product_id}`}>
-              <button>View Auction</button>
-            </Link>
+            {auction.auction_state === "Terminated" ? (
+              <button onClick={() => handleNavigateToProve(auction.product_id)}>
+                Go to Prove
+              </button>
+            ) : (
+              <Link to={`/auction/${auction.product_id}`}>
+                <button>View Auction</button>
+              </Link>
+            )}
           </li>
         ))}
       </ul>

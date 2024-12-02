@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage";
 import CreateAuctionPage from "./pages/CreateAuctionPage";
 import AuctionListPage from "./pages/AuctionListPage";
 import AuctionDetailPage from "./pages/AuctionDetailPage";
+import ProveGroth16Page from "./pages/ProveGroth16Page";
 
 function App() {
   return (
@@ -34,6 +35,10 @@ function App() {
           <Route path="/create-auction" element={<CreateAuctionPage />} />
           <Route path="/auction-list" element={<AuctionListPage />} />
           <Route path="/auction/:productId" element={<AuctionDetailPage />} />
+          <Route
+            path="/proveGroth16/:auctionId"
+            element={<ProveGroth16Page />}
+          />
         </Routes>
       </div>
     </Router>

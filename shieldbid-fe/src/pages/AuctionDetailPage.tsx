@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { finishAuction } from "../api/auctionApi";
+import { commit } from "../api/cryptoApi";
 
 interface AuctionDetailProps {
   product_id: number;
@@ -83,17 +85,32 @@ function AuctionDetailPage() {
     );
   }
 
-  const handleBidSubmit = () => {
+  const handleBidSubmit = async () => {
     if (bidPrice !== null) {
-      alert(`Your bid of ${bidPrice} has been submitted!`);
-      setBidPrice(null);
+      try {
+        const response = await commit(bidPrice.toString());
+        console.log("Commit Response:", response);
+
+        console.log(`Commit successful! Commitment: ${response}`);
+      } catch (error) {
+        console.error("Error committing bid:", error);
+        alert("Failed to commit bid. Please try again.");
+      } finally {
+        setBidPrice(null);
+      }
     } else {
       alert("Please enter a valid bid price.");
     }
   };
 
-  const handleTerminateAuction = () => {
-    alert("Auction terminated!");
+  const handleTerminateAuction = async () => {
+    try {
+      await finishAuction(String(auction.product_id));
+      alert("Auction terminated successfully!");
+      navigate("/auction-list");
+    } catch (error) {
+      alert("Failed to terminate the auction. Please try again.");
+    }
   };
 
   return (
