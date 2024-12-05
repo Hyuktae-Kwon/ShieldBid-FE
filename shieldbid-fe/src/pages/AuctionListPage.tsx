@@ -79,7 +79,7 @@ function AuctionListPage() {
             <p>{`Updated at: ${auction.updated_at.toLocaleString()}`}</p>
             {auction.auction_state === "Terminated" ? (
               <button onClick={() => handleNavigateToProve(auction.product_id)}>
-                Go to Prove
+                Prove
               </button>
             ) : (
               <Link to={`/auction/${auction.product_id}`}>

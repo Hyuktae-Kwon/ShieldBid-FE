@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import VerifyGroth16Page from "./pages/VerifyGroth16Page";
 import SignupPage from "./pages/MainPage";
@@ -9,13 +9,18 @@ import AuctionDetailPage from "./pages/AuctionDetailPage";
 import ProveGroth16Page from "./pages/ProveGroth16Page";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   return (
     <Router>
       <div>
         <nav>
           <ul>
             <li>
-              <Link to="/login">Login</Link>
+              {isLoggedIn ? (
+                <Link to="/">Home</Link>
+              ) : (
+                <Link to="/login">Login</Link>
+              )}
             </li>
             <li>
               <Link to="/create-auction">Create Auction</Link>
@@ -30,7 +35,10 @@ function App() {
         </nav>
         <Routes>
           <Route path="/" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/login"
+            element={<LoginPage onLogin={() => setIsLoggedIn(true)} />}
+          />
           <Route path="/verify-proof" element={<VerifyGroth16Page />} />
           <Route path="/create-auction" element={<CreateAuctionPage />} />
           <Route path="/auction-list" element={<AuctionListPage />} />

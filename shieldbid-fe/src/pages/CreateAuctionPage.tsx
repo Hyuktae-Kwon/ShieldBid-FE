@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function CreateAuctionPage() {
   const [auctionName, setAuctionName] = useState("");
@@ -6,16 +7,11 @@ function CreateAuctionPage() {
   const [description, setDescription] = useState("");
   const [productType, setProductType] = useState("");
   const [productName, setProductName] = useState("");
+  const navigate = useNavigate();
 
   const handleCreateAuction = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Auction Created:", {
-      auctionName,
-      productName,
-      productType,
-      startingBid,
-      description,
-    });
+    navigate("/auction-list");
   };
 
   return (

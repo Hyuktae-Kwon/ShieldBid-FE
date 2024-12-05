@@ -16,7 +16,7 @@ function ProveGroth16Page() {
     e.preventDefault();
     try {
       const proveData = {
-        scalars: [scalars[0], scalars[1]] as [string, string], // 튜플로 명시적으로 변환
+        scalars: [scalars[0], scalars[1]] as [string, string],
         max_scalars: [maxScalars[0], maxScalars[1]] as [string, string],
         bases: [bases[0], bases[1], bases[2], bases[3]] as [
           string,
@@ -137,7 +137,7 @@ function ProveGroth16Page() {
             />
           ))}
         </div>
-        <button type="submit">Submit Proof</button>
+        <button type="submit">Prove</button>
       </form>
 
       {response && (

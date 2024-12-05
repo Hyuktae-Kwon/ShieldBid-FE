@@ -1,12 +1,15 @@
-// LoginPage.tsx
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function LoginPage() {
+function LoginPage({ onLogin }: { onLogin: () => void }) {
   const [address, setAddress] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Login with:", { address });
+    onLogin();
+    navigate("/");
   };
 
   return (

@@ -90,8 +90,10 @@ function AuctionDetailPage() {
       try {
         const response = await commit(bidPrice.toString());
         console.log("Commit Response:", response);
-
         console.log(`Commit successful! Commitment: ${response}`);
+        // todo: post commitment
+
+        navigate("/auction-list");
       } catch (error) {
         console.error("Error committing bid:", error);
         alert("Failed to commit bid. Please try again.");
