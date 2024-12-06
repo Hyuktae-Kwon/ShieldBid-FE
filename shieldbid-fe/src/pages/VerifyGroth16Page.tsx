@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
-import web3 from "../web3";
-import { Uint256 } from "web3";
-import proofData from "../proof_data/proof.json";
-import vkData from "../proof_data/vk.json";
-import verifyInputsData from "../proof_data/verify_inputs.json";
-import gro from "../contract";
 import formatVk from "../types/types";
 
-const proofArr = proofData.proof;
-const verifyInputsArr = verifyInputsData.verifyInputs;
+import React, { useState } from "react";
+import web3 from "../web3";
+import gro from "../contract";
+import { Uint256 } from "web3";
 
 function VerifyGroth16Page() {
   const [proof, setProof] = useState<Uint256[]>([]);
@@ -29,10 +24,21 @@ function VerifyGroth16Page() {
   };
 
   async function fillIn() {
-    const _vk = formatVk(vkData.vk);
-    setProof(proofArr);
-    setInput(verifyInputsArr);
-    setVk(_vk);
+    try {
+      const clipboardText = await navigator.clipboard.readText();
+      const parsedData = JSON.parse(clipboardText);
+      console.log("Parsed data:", parsedData.proof);
+      setProof(parsedData.proof);
+      setInput(parsedData.verify_inputs);
+
+      console.log(`Proof: ${proof}`);
+      console.log(`Input: ${input}`);
+    } catch (error) {
+      console.error("Failed to parse clipboard data:", error);
+      alert(
+        "Failed to parse clipboard data. Ensure the data is in the correct JSON format."
+      );
+    }
   }
 
   async function verifyProof() {

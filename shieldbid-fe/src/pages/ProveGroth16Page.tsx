@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { prove } from "../api/cryptoApi";
+import proveDataJson from "../prove_data/prove_data.json";
 
 function ProveGroth16Page() {
   const { auctionId } = useParams<{ auctionId: string }>();
@@ -11,6 +12,15 @@ function ProveGroth16Page() {
   const [commitment, setCommitment] = useState(["", ""]);
   const [maxCommitment, setMaxCommitment] = useState(["", ""]);
   const [response, setResponse] = useState<any>(null);
+
+  const initializeData = () => {
+    setScalars(proveDataJson.scalars);
+    setMaxScalars(proveDataJson.max_scalars);
+    setBases(proveDataJson.bases);
+    setMaxBases(proveDataJson.max_bases);
+    setCommitment(proveDataJson.commitment);
+    setMaxCommitment(proveDataJson.max_commitment);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,10 +68,30 @@ function ProveGroth16Page() {
     });
   };
 
+  const handleCopyProof = () => {
+    if (!response) {
+      alert("No proof data to copy.");
+      return;
+    }
+
+    const formattedResponse = JSON.stringify(response, null, 2);
+
+    navigator.clipboard
+      .writeText(formattedResponse)
+      .then(() => {
+        alert("Proof data copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Failed to copy proof data:", err);
+        alert("Failed to copy proof data.");
+      });
+  };
+
   return (
     <div>
       <h1>Prove Groth16 Page</h1>
       <h3>{`Auction ID: ${auctionId}`}</h3>
+      <button onClick={initializeData}>Load Data</button>
       <form onSubmit={handleSubmit}>
         <div>
           <h4>Scalars</h4>
@@ -142,16 +172,7 @@ function ProveGroth16Page() {
 
       {response && (
         <div>
-          <h3>Prove Response</h3>
-          <p>
-            <strong>Proof:</strong> {response.proof.join(", ")}
-          </p>
-          <p>
-            <strong>Verification Key:</strong> {response.vk.join(", ")}
-          </p>
-          <p>
-            <strong>Verify Inputs:</strong> {response.verify_inputs.join(", ")}
-          </p>
+          <button onClick={handleCopyProof}>Copy Proof</button>
         </div>
       )}
     </div>
