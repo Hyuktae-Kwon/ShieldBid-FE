@@ -30,9 +30,11 @@ function VerifyGroth16Page() {
       console.log("Parsed data:", parsedData.proof);
       setProof(parsedData.proof);
       setInput(parsedData.verify_inputs);
+      setVk(formatVk(parsedData.vk));
 
-      console.log(`Proof: ${proof}`);
-      console.log(`Input: ${input}`);
+      console.log("Parsed proof:", parsedData.proof);
+      console.log("Parsed inputs:", parsedData.verify_inputs);
+      console.log("Parsed vk:", formatVk(parsedData.vk));
     } catch (error) {
       console.error("Failed to parse clipboard data:", error);
       alert(
@@ -57,7 +59,7 @@ function VerifyGroth16Page() {
         data: web3.eth.abi.encodeFunctionSignature("verifyProof()"),
       });
       const res = await gro.methods.getPairingResult().call();
-      setMessage(res ? "Pairing check passed" : "Pairing check failed");
+      setMessage(res ? "Valid auction" : "Invalid auction");
     } catch (error) {
       setMessage(`Error: ${(error as Error).message}`);
     }
