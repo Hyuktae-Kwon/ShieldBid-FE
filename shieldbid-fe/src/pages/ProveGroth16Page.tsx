@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { prove } from "../api/cryptoApi";
 import proveDataJson from "../prove_data/prove_data.json";
+import "./ProveGroth16Page.css";
 
 function ProveGroth16Page() {
   const { auctionId } = useParams<{ auctionId: string }>();
@@ -104,7 +105,7 @@ function ProveGroth16Page() {
             />
           ))}
         </div>
-        <div>
+        <div className="hidden">
           <h4>Max Scalars</h4>
           {maxScalars.map((val, i) => (
             <input
@@ -128,7 +129,7 @@ function ProveGroth16Page() {
             />
           ))}
         </div>
-        <div>
+        <div className="hidden">
           <h4>Max Bases</h4>
           {maxBases.map((val, i) => (
             <input
