@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import React, { useState } from "react";
-=======
->>>>>>> 5451f62 (feat: main page)
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import VerifyGroth16Page from "./pages/VerifyGroth16Page";
 import SignupPage from "./pages/MainPage";
@@ -10,6 +6,7 @@ import CreateAuctionPage from "./pages/CreateAuctionPage";
 import AuctionListPage from "./pages/AuctionListPage";
 import AuctionDetailPage from "./pages/AuctionDetailPage";
 import ProveGroth16Page from "./pages/ProveGroth16Page";
+import { useState } from "react";
 import MainPage from "./pages/MainPage";
 
 function App() {
@@ -44,7 +41,8 @@ function App() {
           </ul>
         </nav>
         <Routes>
-          <Route path="/" element={<SignupPage />} />
+          <Route path="/" element={<MainPage />} />
+          <Route path="/signUp" element={<SignupPage />} />
           <Route
             path="/login"
             element={<LoginPage onLogin={() => setIsLoggedIn(true)} />}
