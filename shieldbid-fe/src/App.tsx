@@ -45,12 +45,12 @@ function App() {
           <Route path="/signUp" element={<SignupPage />} />
           <Route
             path="/login"
-            element={<LoginPage onLogin={() => setIsLoggedIn(true)} />}
+            element={<LoginPage />}
           />
           <Route path="/verify-proof" element={<VerifyGroth16Page />} />
           <Route path="/create-auction" element={<CreateAuctionPage />} />
           <Route path="/auction-list" element={<AuctionListPage />} />
-          <Route path="/auction/:productId" element={<AuctionDetailPage />} />
+          <Route path="/auction/:auctionId" element={<AuctionDetailPage />} />
           <Route
             path="/proveGroth16/:auctionId"
             element={<ProveGroth16Page />}

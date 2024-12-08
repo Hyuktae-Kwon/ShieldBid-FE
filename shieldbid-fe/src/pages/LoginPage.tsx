@@ -1,15 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { loginWithAddr } from "../api/userApi";
+import { Cookies } from "react-cookie";
 
-function LoginPage({ onLogin }: { onLogin: () => void }) {
+function LoginPage() {
   const [address, setAddress] = useState("");
   const navigate = useNavigate();
+  const cookie = new Cookies();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login with:", { address });
-    onLogin();
-    navigate("/");
+    loginWithAddr(address).then((user) => {
+      cookie.set("user", JSON.stringify(user));
+      navigate("/")
+    }).catch((e) => {
+      console.log(e)
+    })
+    //navigate("/");
   };
 
   return (

@@ -1,18 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { finishAuction } from "../api/auctionApi";
+import { finishAuction, queryAuction } from "../api/auctionApi";
 import { commit } from "../api/cryptoApi";
-
-interface AuctionDetailProps {
-  product_id: number;
-  auction_state: string;
-  product_name: string;
-  product_type: string;
-  product_description: string;
-  created_at: Date;
-  updated_at: Date;
-  min_price: number;
-}
+import { AuctionDto } from "../dto/AuctionDto";
+import { Cookies } from "react-cookie";
+import { UserDto } from "../dto/UserDto";
 
 interface User {
   id: string;
@@ -21,69 +13,38 @@ interface User {
 
 const now = new Date(Date.now());
 
-const dummyAuctionData: AuctionDetailProps[] = [
-  {
-    product_id: 1,
-    product_name: "Antique Vase",
-    product_type: "A",
-    product_description: "A rare antique vase.",
-    auction_state: "Started",
-    created_at: now,
-    updated_at: now,
-    min_price: 100,
-  },
-  {
-    product_id: 2,
-    product_name: "Vintage Watch",
-    product_type: "B",
-    product_description: "A classic vintage watch.",
-    auction_state: "pending",
-    created_at: now,
-    updated_at: now,
-    min_price: 1000,
-  },
-  {
-    product_id: 3,
-    product_name: "Artwork",
-    product_type: "A",
-    product_description: "Beautiful painting by a famous artist.",
-    auction_state: "Terminated",
-    created_at: now,
-    updated_at: now,
-    min_price: 10000,
-  },
-];
-
 function AuctionDetailPage() {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserDto | null>(null);
+  const [auction, setAuction] = useState<AuctionDto | null>(null);
   const [bidPrice, setBidPrice] = useState<number | null>(null);
-  const { productId } = useParams<{ productId: string }>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const { auctionId } = useParams<{ auctionId: string }>();
+  const cookies = new Cookies();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const dummyUser: User = {
-        id: "0xdD2FD4581271e230360230F9337D5c0430Bf44C0",
-        isConsignor: false,
-      };
-      setUser(dummyUser);
-    };
+    const fetchAuction = async () => {
+      const id = !auctionId ? "" : auctionId;
+      const user = cookies.get("user") as UserDto
+      setUser(user)
+      
+      queryAuction(id)
+      .then(auction => {
+        setLoading(false) //* FIXME
+        if (!auction) {
+          return (
+            <div>
+              <h1>Auction Not Found</h1>
+              <button onClick={() => navigate("/auction-list")}>Go Back</button>
+            </div>
+          );
+        }
+        setAuction(auction)
+      })
+    }
 
-    fetchUser();
+    fetchAuction();
   }, []);
-
-  const auction = dummyAuctionData.find(
-    (item) => item.product_id === Number(productId)
-  );
-
-  if (!auction) {
-    return (
-      <div>
-        <h1>Auction Not Found</h1>
-        <button onClick={() => navigate("/auction-list")}>Go Back</button>
-      </div>
-    );
-  }
 
   const handleBidSubmit = async () => {
     if (bidPrice !== null) {
@@ -107,7 +68,7 @@ function AuctionDetailPage() {
 
   const handleTerminateAuction = async () => {
     try {
-      await finishAuction(String(auction.product_id));
+      await finishAuction(String(auction?.status));
       alert("Auction terminated successfully!");
       navigate("/auction-list");
     } catch (error) {
@@ -116,46 +77,71 @@ function AuctionDetailPage() {
   };
 
   return (
-    <div>
-      <h1>{auction.product_name}</h1>
-      <p>
-        <strong>Description:</strong> {auction.product_description}
-      </p>
-      <p>
-        <strong>Status:</strong> {auction.auction_state}
-      </p>
-      <p>
-        <strong>Created At:</strong>{" "}
-        {new Date(auction.created_at).toLocaleString()}
-      </p>
-      <p>
-        <strong>Updated At:</strong>{" "}
-        {new Date(auction.updated_at).toLocaleString()}
-      </p>
+    loading ? <></> : <div className="flex flex-col w-full min-h-svh p-8">
+    <h1 className="text-5xl text-white font-bold font-dream text-center my-12">
+      {auction?.product.name}
+    </h1>
 
-      {user?.isConsignor && auction.auction_state === "Started" && (
-        <div>
-          <button onClick={handleTerminateAuction}>Terminate auction</button>
-        </div>
-      )}
+    <div className="flex flex-col w-full px-32 space-y-6 text-white">
+      <div>
+        <h3 className="text-2xl font-dream mb-2">Description:</h3>
+        <p className="text-white/80">{auction?.product.description}</p>
+      </div>
 
-      {!user?.isConsignor && auction.auction_state === "Started" && (
-        <div>
-          <h3>Place Your Bid</h3>
-          <input
-            type="number"
-            placeholder="Enter your bid price"
-            value={bidPrice || ""}
-            onChange={(e) => setBidPrice(Number(e.target.value))}
-          />
-          <button onClick={handleBidSubmit}>Submit Bid</button>
-        </div>
-      )}
+      <div>
+        <h3 className="text-2xl font-dream mb-2">Status:</h3>
+        <p>{auction?.status}</p>
+      </div>
 
-      <button onClick={() => navigate("/auction-list")}>
-        Back to Auction List
-      </button>
+      <div>
+        <h3 className="text-2xl font-dream mb-2">Created At:</h3>
+        <p>{auction?.createdAt.toLocaleString()}</p>
+      </div>
+
+      <div>
+        <h3 className="text-2xl font-dream mb-2">Updated At:</h3>
+        <p>{auction?.updatedAt.toLocaleString()}</p>
+      </div>
+
+      <div className="flex justify-center space-x-4 mt-8">
+        {user?.id === auction?.product.owner && auction?.status === "START" && (
+          <button 
+            className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
+            onClick={handleTerminateAuction}
+          >
+            Terminate Auction
+          </button>
+        )}
+
+        {user?.id !== auction?.product.owner && auction?.status === "START" && (
+          <div className="flex flex-col items-center space-y-4">
+            <input
+              type="number"
+              value={!bidPrice ? 0 : bidPrice}
+              onChange={(e) => setBidPrice(Number(e.target.value))}
+              className="bg-transparent border-b-white border-b-2 text-white text-center w-full"
+              placeholder="Enter Bid Price"
+            />
+            <button 
+              className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
+              onClick={handleBidSubmit}
+            >
+              Submit Bid
+            </button>
+          </div>
+        )}
+      </div>
+
+      <div className="flex justify-center mt-8">
+        <button 
+          className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
+          onClick={() => navigate("/auction-list")}
+        >
+          Back to Auction List
+        </button>
+      </div>
     </div>
+  </div>
   );
 }
 

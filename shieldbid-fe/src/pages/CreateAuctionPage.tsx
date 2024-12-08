@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Cookies } from "react-cookie";
+import { UserDto } from "../dto/UserDto";
+import { createAuction } from "../api/auctionApi";
 
 function CreateAuctionPage() {
   const [auctionName, setAuctionName] = useState("");
@@ -7,10 +10,25 @@ function CreateAuctionPage() {
   const [description, setDescription] = useState("");
   const [productType, setProductType] = useState("");
   const [productName, setProductName] = useState("");
+  const [buttonName, setButtonName] = useState("Create Auction")
   const navigate = useNavigate();
-
-  const handleCreateAuction = (e: React.FormEvent) => {
+  const cookie = new Cookies();
+  
+  const handleCreateAuction = async (e: React.FormEvent) => {
     e.preventDefault();
+    const user: UserDto = cookie.get("user") as UserDto;
+    await createAuction({
+      ownerId: user.id,
+      productName: productName,
+      auctionTitle: auctionName,
+      productType,
+      productDescription: description,
+      minimalPrice: startingBid
+    })
+    setButtonName("Creating...")
+    await new Promise(resolve => setTimeout(resolve, 5000));
+  
+  // Navigate after 5 seconds
     navigate("/auction-list");
   };
 
@@ -71,7 +89,7 @@ function CreateAuctionPage() {
           type="submit" 
           className="text-2xl mt-12 text-white font-dream"
         >
-          Create Auction
+          {buttonName}
         </button>
       </form>
     </div>
