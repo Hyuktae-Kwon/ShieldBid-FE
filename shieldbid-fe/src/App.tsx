@@ -17,7 +17,7 @@ function App() {
         <nav className="flex">
           <ul className="flex w-full justify-center items-center h-24 text-white gap-24 font-dream">
             <li>
-              <Link to="/">Main Page</Link>
+              <Link to="/">Main</Link>
             </li>
             <li>
               <Link to="/signUp">Sign Up</Link>
@@ -43,10 +43,7 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/signUp" element={<SignupPage />} />
-          <Route
-            path="/login"
-            element={<LoginPage />}
-          />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/verify-proof" element={<VerifyGroth16Page />} />
           <Route path="/create-auction" element={<CreateAuctionPage />} />
           <Route path="/auction-list" element={<AuctionListPage />} />
