@@ -11,6 +11,7 @@ function LoginPage() {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     loginWithAddr(address).then((user) => {
+      cookie.remove("user"); //* Reset the user information.
       cookie.set("user", JSON.stringify(user));
       navigate("/")
     }).catch((e) => {
