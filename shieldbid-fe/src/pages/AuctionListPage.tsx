@@ -71,7 +71,7 @@ function AuctionListPage() {
             <p className="text-white mb-2">{`Opening Bid: ${auction.min_price}`}</p>
             <p className="text-white/60 mb-4">{`Updated at: ${auction.updated_at.toLocaleString()}`}</p>
             <div className="self-center">
-              {auction.auction_state === "Terminated" ? (
+              {auction.auction_state === "TERMINATED" ? (
                 <button 
                   onClick={() => handleNavigateToProve(auction.auction_id)}
                   className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"

@@ -75,9 +75,9 @@ function AuctionDetailPage() {
 
   const handleTerminateAuction = async () => {
     try {
-      await finishAuction(String(auction?.status));
+      await finishAuction(String(auction?.id));
       await auctionContract.methods.closeAuction().send({
-        from: user?.address,
+        from: "0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199",//user?.address,
         data: web3.eth.abi.encodeFunctionSignature("closeAuction()"),
         gas: "1000000",
       });

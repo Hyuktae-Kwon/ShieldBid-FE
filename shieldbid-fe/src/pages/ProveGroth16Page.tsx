@@ -89,91 +89,132 @@ function ProveGroth16Page() {
   };
 
   return (
-    <div>
-      <h1>Prove Groth16 Page</h1>
-      <h3>{`Auction ID: ${auctionId}`}</h3>
-      <button onClick={initializeData}>Load Data</button>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <h4>Scalars</h4>
-          {scalars.map((val, i) => (
-            <input
-              key={`scalar-${i}`}
-              value={val}
-              onChange={(e) => handleInputChange(setScalars, i, e.target.value)}
-              placeholder={`Scalar ${i + 1}`}
-            />
-          ))}
+    <div className="flex flex-col w-full h-svh">
+      <h2 className="text-5xl text-white font-bold font-dream text-center my-12">
+        Prove Page
+      </h2>
+      <hr className="border-white w-full opacity-50 mb-8" />
+      
+      <h3 className="text-2xl text-white font-dream text-center mb-4">
+        {`Auction ID: ${auctionId}`}
+      </h3>
+      
+      <button 
+        onClick={initializeData}
+        className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors mx-auto mb-8"
+      >
+        Load Data
+      </button>
+      
+      <form 
+        onSubmit={handleSubmit} 
+        className="flex flex-col w-full"
+      >
+        {/* Scalars */}
+        <div className="flex flex-col w-full px-32 my-4">
+          <label className="text-xl font-dream text-white text-center mb-4">
+            Scalars
+          </label>
+          <div className="grid grid-cols-4 gap-4">
+            {scalars.map((val, i) => (
+              <input
+                key={`scalar-${i}`}
+                value={val}
+                onChange={(e) => handleInputChange(setScalars, i, e.target.value)}
+                placeholder={`Scalar ${i + 1}`}
+                className="bg-transparent border-b-white border-b-2 text-white text-center"
+              />
+            ))}
+          </div>
         </div>
+  
+        {/* Bases */}
+        <div className="flex flex-col w-full px-32 my-4">
+          <label className="text-xl font-dream text-white text-center mb-4">
+            Bases
+          </label>
+          <div className="grid grid-cols-4 gap-4">
+            {bases.map((val, i) => (
+              <input
+                key={`base-${i}`}
+                value={val}
+                onChange={(e) => handleInputChange(setBases, i, e.target.value)}
+                placeholder={`Base ${i + 1}`}
+                className="bg-transparent border-b-white border-b-2 text-white text-center"
+              />
+            ))}
+          </div>
+        </div>
+  
+        {/* Commitment */}
+        <div className="flex flex-col w-full px-32 my-4">
+          <label className="text-xl font-dream text-white text-center mb-4">
+            Commitment
+          </label>
+          <div className="grid grid-cols-4 gap-4">
+            {commitment.map((val, i) => (
+              <input
+                key={`commitment-${i}`}
+                value={val}
+                onChange={(e) => handleInputChange(setCommitment, i, e.target.value)}
+                placeholder={`Commitment ${i + 1}`}
+                className="bg-transparent border-b-white border-b-2 text-white text-center"
+              />
+            ))}
+          </div>
+        </div>
+  
+        {/* Hidden Inputs */}
         <div className="hidden">
-          <h4>Max Scalars</h4>
+          {/* Max Scalars */}
           {maxScalars.map((val, i) => (
             <input
               key={`max-scalar-${i}`}
               value={val}
-              onChange={(e) =>
-                handleInputChange(setMaxScalars, i, e.target.value)
-              }
+              onChange={(e) => handleInputChange(setMaxScalars, i, e.target.value)}
               placeholder={`Max Scalar ${i + 1}`}
             />
           ))}
-        </div>
-        <div>
-          <h4>Bases</h4>
-          {bases.map((val, i) => (
-            <input
-              key={`base-${i}`}
-              value={val}
-              onChange={(e) => handleInputChange(setBases, i, e.target.value)}
-              placeholder={`Base ${i + 1}`}
-            />
-          ))}
-        </div>
-        <div className="hidden">
-          <h4>Max Bases</h4>
+          
+          {/* Max Bases */}
           {maxBases.map((val, i) => (
             <input
               key={`max-base-${i}`}
               value={val}
-              onChange={(e) =>
-                handleInputChange(setMaxBases, i, e.target.value)
-              }
+              onChange={(e) => handleInputChange(setMaxBases, i, e.target.value)}
               placeholder={`Max Base ${i + 1}`}
             />
           ))}
-        </div>
-        <div>
-          <h4>Commitment</h4>
-          {commitment.map((val, i) => (
-            <input
-              key={`commitment-${i}`}
-              value={val}
-              onChange={(e) =>
-                handleInputChange(setCommitment, i, e.target.value)
-              }
-              placeholder={`Commitment ${i + 1}`}
-            />
-          ))}
-        </div>
-        <div>
-          <h4>Max Commitment</h4>
+          
+          {/* Max Commitment */}
           {maxCommitment.map((val, i) => (
             <input
               key={`max-commitment-${i}`}
               value={val}
-              onChange={(e) =>
-                handleInputChange(setMaxCommitment, i, e.target.value)
-              }
+              onChange={(e) => handleInputChange(setMaxCommitment, i, e.target.value)}
               placeholder={`Max Commitment ${i + 1}`}
             />
           ))}
         </div>
-        <button type="submit">Prove</button>
+  
+        <div className="flex justify-center space-x-4 mt-8">
+          <button
+            type="submit"
+            className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
+          >
+            Prove
+          </button>
+        </div>
       </form>
-
+  
       {response && (
-        <div>
-          <button onClick={handleCopyProof}>Copy Proof</button>
+        <div className="flex justify-center mt-8">
+          <button
+            onClick={handleCopyProof}
+            className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
+          >
+            Copy Proof
+          </button>
         </div>
       )}
     </div>

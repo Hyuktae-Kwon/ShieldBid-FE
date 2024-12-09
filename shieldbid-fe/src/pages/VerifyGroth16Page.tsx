@@ -71,7 +71,7 @@ function VerifyGroth16Page() {
         Verify Proof
       </h2>
       <hr className="border-white w-full opacity-50 mb-8" />
-      <form onSubmit={verifyProof} className="flex flex-col">
+      <form className="flex flex-col">
         <h4 className="text-2xl text-white font-dream text-center mb-8">
           Input Proof and Inputs
         </h4>
@@ -109,13 +109,15 @@ function VerifyGroth16Page() {
         </div>
         <div className="flex justify-center space-x-4 mt-8">
           <button
-            onClick={fillIn}
+            onClick={async () => { await fillIn() }}
+            type="button"
             className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
           >
             Fill in Data
           </button>
           <button
-            onClick={verifyProof}
+            onClick={async () => { await verifyProof()}}
+            type="button"
             className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
           >
             Verify Proof
