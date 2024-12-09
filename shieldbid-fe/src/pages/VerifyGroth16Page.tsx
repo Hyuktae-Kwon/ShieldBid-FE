@@ -2,7 +2,7 @@ import formatVk from "../types/types";
 
 import React, { useState } from "react";
 import web3 from "../web3";
-import gro from "../contract";
+import gro from "../grothContract";
 import { Uint256 } from "web3";
 
 function VerifyGroth16Page() {
@@ -67,12 +67,18 @@ function VerifyGroth16Page() {
 
   return (
     <div className="flex flex-col w-full h-svh">
-      <h2 className="text-5xl text-white font-bold font-dream text-center my-12">Verify Proof</h2>
+      <h2 className="text-5xl text-white font-bold font-dream text-center my-12">
+        Verify Proof
+      </h2>
       <hr className="border-white w-full opacity-50 mb-8" />
       <form onSubmit={verifyProof} className="flex flex-col">
-        <h4 className="text-2xl text-white font-dream text-center mb-8">Input Proof and Inputs</h4>
+        <h4 className="text-2xl text-white font-dream text-center mb-8">
+          Input Proof and Inputs
+        </h4>
         <div className="flex flex-col w-full px-32 my-4">
-          <label className="text-xl font-dream text-white text-center mb-4">Proof:</label>
+          <label className="text-xl font-dream text-white text-center mb-4">
+            Proof:
+          </label>
           <div className="grid grid-cols-4 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <input
@@ -86,7 +92,9 @@ function VerifyGroth16Page() {
           </div>
         </div>
         <div className="flex flex-col w-full px-32 my-4">
-          <label className="text-xl font-dream text-white text-center mb-4">Inputs:</label>
+          <label className="text-xl font-dream text-white text-center mb-4">
+            Inputs:
+          </label>
           <div className="grid grid-cols-4 gap-4">
             {Array.from({ length: 12 }).map((_, i) => (
               <input
@@ -100,20 +108,22 @@ function VerifyGroth16Page() {
           </div>
         </div>
         <div className="flex justify-center space-x-4 mt-8">
-          <button 
+          <button
             onClick={fillIn}
             className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
           >
             Fill in Data
           </button>
-          <button 
+          <button
             onClick={verifyProof}
             className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
           >
             Verify Proof
           </button>
         </div>
-        <h1 className="text-2xl text-white font-dream text-center mt-8">{message}</h1>
+        <h1 className="text-2xl text-white font-dream text-center mt-8">
+          {message}
+        </h1>
       </form>
     </div>
   );

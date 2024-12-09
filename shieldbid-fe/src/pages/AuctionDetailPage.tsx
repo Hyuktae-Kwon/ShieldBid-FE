@@ -5,6 +5,9 @@ import { commit } from "../api/cryptoApi";
 import { AuctionDto } from "../dto/AuctionDto";
 import { Cookies } from "react-cookie";
 import { UserDto } from "../dto/UserDto";
+import grothContract from "../grothContract";
+import auctionContract from "../auctionContract";
+import web3 from "../web3";
 
 interface User {
   id: string;
@@ -25,12 +28,11 @@ function AuctionDetailPage() {
   useEffect(() => {
     const fetchAuction = async () => {
       const id = !auctionId ? "" : auctionId;
-      const user = cookies.get("user") as UserDto
-      setUser(user)
-      
-      queryAuction(id)
-      .then(auction => {
-        setLoading(false) //* FIXME
+      const user = cookies.get("user") as UserDto;
+      setUser(user);
+
+      queryAuction(id).then((auction) => {
+        setLoading(false); //* FIXME
         if (!auction) {
           return (
             <div>
@@ -39,9 +41,9 @@ function AuctionDetailPage() {
             </div>
           );
         }
-        setAuction(auction)
-      })
-    }
+        setAuction(auction);
+      });
+    };
 
     fetchAuction();
   }, []);
@@ -52,7 +54,12 @@ function AuctionDetailPage() {
         const response = await commit(bidPrice.toString());
         console.log("Commit Response:", response);
         console.log(`Commit successful! Commitment: ${response}`);
-        // todo: post commitment
+
+        await auctionContract.methods.bid().send({
+          from: user?.address,
+          data: web3.eth.abi.encodeFunctionSignature("bid()"),
+          gas: "1000000",
+        });
 
         navigate("/auction-list");
       } catch (error) {
@@ -69,6 +76,11 @@ function AuctionDetailPage() {
   const handleTerminateAuction = async () => {
     try {
       await finishAuction(String(auction?.status));
+      await auctionContract.methods.closeAuction().send({
+        from: user?.address,
+        data: web3.eth.abi.encodeFunctionSignature("closeAuction()"),
+        gas: "1000000",
+      });
       alert("Auction terminated successfully!");
       navigate("/auction-list");
     } catch (error) {
@@ -76,72 +88,76 @@ function AuctionDetailPage() {
     }
   };
 
-  return (
-    loading ? <></> : <div className="flex flex-col w-full min-h-svh p-8">
-    <h1 className="text-5xl text-white font-bold font-dream text-center my-12">
-      {auction?.product.name}
-    </h1>
+  return loading ? (
+    <></>
+  ) : (
+    <div className="flex flex-col w-full min-h-svh p-8">
+      <h1 className="text-5xl text-white font-bold font-dream text-center my-12">
+        {auction?.product.name}
+      </h1>
 
-    <div className="flex flex-col w-full px-32 space-y-6 text-white">
-      <div>
-        <h3 className="text-2xl font-dream mb-2">Description:</h3>
-        <p className="text-white/80">{auction?.product.description}</p>
-      </div>
+      <div className="flex flex-col w-full px-32 space-y-6 text-white">
+        <div>
+          <h3 className="text-2xl font-dream mb-2">Description:</h3>
+          <p className="text-white/80">{auction?.product.description}</p>
+        </div>
 
-      <div>
-        <h3 className="text-2xl font-dream mb-2">Status:</h3>
-        <p>{auction?.status}</p>
-      </div>
+        <div>
+          <h3 className="text-2xl font-dream mb-2">Status:</h3>
+          <p>{auction?.status}</p>
+        </div>
 
-      <div>
-        <h3 className="text-2xl font-dream mb-2">Created At:</h3>
-        <p>{auction?.createdAt.toLocaleString()}</p>
-      </div>
+        <div>
+          <h3 className="text-2xl font-dream mb-2">Created At:</h3>
+          <p>{auction?.createdAt.toLocaleString()}</p>
+        </div>
 
-      <div>
-        <h3 className="text-2xl font-dream mb-2">Updated At:</h3>
-        <p>{auction?.updatedAt.toLocaleString()}</p>
-      </div>
+        <div>
+          <h3 className="text-2xl font-dream mb-2">Updated At:</h3>
+          <p>{auction?.updatedAt.toLocaleString()}</p>
+        </div>
 
-      <div className="flex justify-center space-x-4 mt-8">
-        {user?.id === auction?.product.owner && auction?.status === "START" && (
-          <button 
+        <div className="flex justify-center space-x-4 mt-8">
+          {user?.id === auction?.product.owner &&
+            auction?.status === "START" && (
+              <button
+                className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
+                onClick={handleTerminateAuction}
+              >
+                Terminate Auction
+              </button>
+            )}
+
+          {user?.id !== auction?.product.owner &&
+            auction?.status === "START" && (
+              <div className="flex flex-col items-center space-y-4">
+                <input
+                  type="number"
+                  value={!bidPrice ? 0 : bidPrice}
+                  onChange={(e) => setBidPrice(Number(e.target.value))}
+                  className="bg-transparent border-b-white border-b-2 text-white text-center w-full"
+                  placeholder="Enter Bid Price"
+                />
+                <button
+                  className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
+                  onClick={handleBidSubmit}
+                >
+                  Submit Bid
+                </button>
+              </div>
+            )}
+        </div>
+
+        <div className="flex justify-center mt-8">
+          <button
             className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
-            onClick={handleTerminateAuction}
+            onClick={() => navigate("/auction-list")}
           >
-            Terminate Auction
+            Back to Auction List
           </button>
-        )}
-
-        {user?.id !== auction?.product.owner && auction?.status === "START" && (
-          <div className="flex flex-col items-center space-y-4">
-            <input
-              type="number"
-              value={!bidPrice ? 0 : bidPrice}
-              onChange={(e) => setBidPrice(Number(e.target.value))}
-              className="bg-transparent border-b-white border-b-2 text-white text-center w-full"
-              placeholder="Enter Bid Price"
-            />
-            <button 
-              className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
-              onClick={handleBidSubmit}
-            >
-              Submit Bid
-            </button>
-          </div>
-        )}
-      </div>
-
-      <div className="flex justify-center mt-8">
-        <button 
-          className="text-xl text-white font-dream px-4 py-2 border-b-2 border-white hover:bg-white/20 transition-colors"
-          onClick={() => navigate("/auction-list")}
-        >
-          Back to Auction List
-        </button>
+        </div>
       </div>
     </div>
-  </div>
   );
 }
 
